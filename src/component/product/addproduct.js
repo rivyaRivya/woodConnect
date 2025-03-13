@@ -191,10 +191,9 @@ const AddProduct = () => {
             <h3 className="head">Add New Product</h3>
 
             <form onSubmit={handleSubmit} className="product-details-form">
-                <div className="form-container">
-
+                <div className="form-box">
                     {/* Section 1: Product Details */}
-                    <div className="section">
+                    <div className="section section-1">
                         <div className="form-group">
                             <label htmlFor="productname">Product Name</label>
                             <input
@@ -241,8 +240,8 @@ const AddProduct = () => {
                         </div>
                     </div>
 
-                    {/* Section 2: Wood Details */}
-                    <div className="section">
+                    {/* Section 2: Wood Details & Additional Information */}
+                    <div className="section section-2">
                         <div className="form-group">
                             <label htmlFor="stock">Stock</label>
                             <input
@@ -305,10 +304,6 @@ const AddProduct = () => {
                                 required
                             />
                         </div>
-                    </div>
-
-                    {/* Section 3: Additional Information & Image Upload */}
-                    <div className="section">
                         <div className="form-group">
                             <label htmlFor="manufacturePrice">Manufacturing Price</label>
                             <input
@@ -350,7 +345,6 @@ const AddProduct = () => {
                             {imageURL && <img src={imageURL} alt="Uploaded" style={{ width: '200px', height: 'auto' }} />}
                         </div>
                     </div>
-
                 </div>
 
                 {/* Submit Button */}
