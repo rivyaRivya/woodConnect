@@ -1,0 +1,206 @@
+/* Global Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f7f6;
+  color: #333;
+}
+
+/* Order Details Container */
+.order-details-container {
+  padding: 30px;
+  max-width: 1200px;
+  margin: auto;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading Styles */
+.order-heading {
+  color: #1e3a8a;
+  margin-bottom: 20px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 1.5rem;
+  color: #1e3a8a;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #1e3a8a;
+  padding-bottom: 5px;
+  text-align: left;
+}
+
+/* Flex Layout for Left and Right Columns */
+.order-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: space-between;
+}
+
+.order-info,
+.product-info {
+  flex: 1;
+  min-width: 300px; /* Ensures content doesn't get too narrow */
+}
+
+.order-info {
+  margin-bottom: 40px;
+}
+
+.order-info-item {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #999;
+}
+
+/* Product Information */
+.product-info {
+  margin-top: 40px;
+}
+
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.product-card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.product-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #1e3a8a;
+}
+
+.product-details p {
+  margin: 5px 0;
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Rupee symbol styling */
+.product-info p, .order-info-item {
+  font-size: 1rem;
+}
+
+.product-info p strong, .order-info-item strong {
+  font-weight: bold;
+  color: #1e3a8a;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .order-details-container {
+    padding: 20px;
+  }
+
+  .order-heading {
+    font-size: 2rem;
+  }
+
+  .order-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .product-list {
+    grid-template-columns: 1fr;
+  }
+
+  .product-card {
+    padding: 15px;
+  }
+}
+/* Order Info Container */
+.order-info-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Section Title */
+.section-title {
+    font-size: 1.8rem;
+    color: #1e3a8a;
+    margin-bottom: 15px;
+    text-align: center;
+    text-transform: uppercase;
+    border-bottom: 2px solid #1e3a8a;
+    padding-bottom: 5px;
+}
+
+/* Flex container for order info */
+.order-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+/* Left column for order details */
+.order-left {
+    flex: 1;
+    min-width: 280px; /* Ensures it doesn't get too narrow */
+}
+
+/* Right column for remaining details */
+.order-right {
+    flex: 1;
+    min-width: 280px; /* Ensures it doesn't get too narrow */
+}
+
+/* Order Info Item Styling */
+.order-info-item {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+    .order-info-item strong {
+        font-weight: bold;
+        color: #1e3a8a;
+    }
+
+/* Loading state */
+.loading {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #999;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .order-info {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+.assign {
+    float: right;
+    margin: unset;
+}

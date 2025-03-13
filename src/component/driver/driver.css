@@ -1,0 +1,61 @@
+.driver-button {
+    margin-right: 5px;
+    padding: 4px;
+    margin-top: 0px !important;
+    width: 80px;
+    border-radius: 2px;
+}
+.driver-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 90%;
+    margin: auto;
+}
+
+.driver-form-container .form-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.driver-form-container .left-section,
+.driver-form-container .right-section {
+    width: 48%;
+}
+
+.driver-form-container .form-group {
+    margin-bottom: 1rem;
+}
+
+.driver-form-container label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+.driver-form-container input {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.driver-form-container .btn-submit {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 10px;
+    width: 300px;
+}
+.driver-form-container textarea {
+    height: 127px;
+}
+
+    .driver-form-container .btn-submit:hover {
+        background-color: #0056b3;
+    }
