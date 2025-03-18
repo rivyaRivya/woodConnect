@@ -73,7 +73,13 @@ const SideNav = () => {
                                     className="nav-link"
                                     activeClassName="active" // Automatically adds the active class
                                     exact
-                                >Add product</NavLink></li>
+                                    >Add product</NavLink></li>
+                                    <li><NavLink
+                                        to="/variance"
+                                        className="nav-link"
+                                        activeClassName="active" // Automatically adds the active class
+                                        exact
+                                    >Variant</NavLink></li>
                                 <li><NavLink
                                     to="/wood-type"
                                     className="nav-link"

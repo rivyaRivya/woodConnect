@@ -91,7 +91,7 @@ const AddWoodType = () => {
     return (
         <div className="product-form-container">
             <h2>Add New Wood</h2>
-            <form onSubmit={handleSubmit} className="product-form">
+            <form onSubmit={handleSubmit} className="wood-form">
                 <div className="form-group">
                     <label htmlFor="name">Wood Name</label>
                     <input

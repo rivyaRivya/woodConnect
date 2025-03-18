@@ -36,3 +36,65 @@
 .add {
     background-color: #4CAF50;
 }
+
+
+
+/* src/App.css */
+
+
+
+    .variant-type-list h1 {
+        text-align: center;
+    }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+    table th, table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    table th {
+        background-color: #f2f2f2;
+    }
+
+    table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    table button {
+        padding: 5px 10px;
+        background-color: red;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+        table button:hover {
+            background-color: darkred;
+        }
+
+.add-variant-type-form {
+    margin-top: 20px;
+    text-align: center;
+}
+
+    .add-variant-type-form input {
+        padding: 10px;
+        width: 200px;
+        margin-right: 10px;
+    }
+
+    .add-variant-type-form button {
+        padding: 10px 20px;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    

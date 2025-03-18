@@ -6,10 +6,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 const AddProduct = () => {
     // Access the dynamic 'id' parameter from the URL
     const { id } = useParams();
+    const [availableVariants, setAvailableVariants] = useState([]); // Variant types and values from API
+    const [selectedVariants, setSelectedVariants] = useState([]); // Stores selected variant types and their values
 
     const [buttonLabel, setButtonLabel] = useState("Add product");
     const navigate = useNavigate();
-      const [image, setImage] = useState(null);
+    const [image, setImage] = useState(null);
     const [imageBlob, setImageBlob] = useState(null);
     const [imageURL, setImageURL] = useState(null);
     const [productData, setProductData] = useState({
@@ -24,8 +26,8 @@ const AddProduct = () => {
         length: null,
         labourPrice: null,
         manufacturePrice: null,
-        woodPrice: null
-
+        woodPrice: null,
+        isFeatured : null
     });
     const [woodTypes, setWoodTypes] = useState([]); // State to store wood types
 
@@ -40,13 +42,30 @@ const AddProduct = () => {
             console.error("Error fetching product types", error);
         }
     }
-    
+
+
+    const fetchVariantData = async () => {
+        try {
+            // Simulated API response
+            const response = {
+                variantTypes: [
+                    { type: 'Size', values: ['Small', 'Medium', 'Large'] },
+                    { type: 'Color', values: ['Red', 'Blue', 'Green'] },
+                ],
+            };
+
+            setAvailableVariants(response.variantTypes);
+        } catch (error) {
+            console.error('Error fetching variant data:', error);
+        }
+    };
+
     // Fetch wood types dynamically from API
     const fetchWoodTypes = async () => {
         try {
             const response = await axios.get('http://localhost:8080/wood-type'); // Adjust API URL
             if (response)
-            setWoodTypes(response.data);
+                setWoodTypes(response.data);
         } catch (error) {
             console.error("Error fetching wood types", error);
         }
@@ -60,7 +79,7 @@ const AddProduct = () => {
             [name]: value,
         }));
     };
-    
+
     const onUpdate = async () => {
         try {
             // Make an API call to the Spring Boot backend login endpoint
@@ -92,7 +111,7 @@ const AddProduct = () => {
             // Handle login failure
         }
     }
- 
+
     useEffect(() => {
         const today = new Date();
         const todayString = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
@@ -103,25 +122,40 @@ const AddProduct = () => {
             setButtonLabel("Update");
             getProductDetails();
         }
+        fetchVariantData();
         fetchWoodTypes();
     }, []);
 
+
+    const handleAddVariant = () => {
+        const newVariant = { type: '', values: [] };
+        setSelectedVariants([...selectedVariants, newVariant]);
+    };
+
+    // Handle selecting a variant type and its values
+    const handleVariantChange = (index, type, selectedValues) => {
+        const updatedVariants = [...selectedVariants];
+        updatedVariants[index] = { type, values: selectedValues };
+        setSelectedVariants(updatedVariants);
+    };
+
     // Handle dropdown selection change
     const handleDropdownChange = (e) => {
-        console.log(e.target.value);
+        console.log(e)
+        console.log(e.target.value.id, e.target.value.price);
         productData.woodType_id = e.target.value.id;
         productData.woodPrice = e.target.value.price;
         console.log(productData)
     };
-    
+
 
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (id == 0) { 
-            
-        // Add the product using the passed onAddProduct function
-        // Reset the form after submission
+        if (id == 0) {
+
+            // Add the product using the passed onAddProduct function
+            // Reset the form after submission
             try {
                 productData.image = image;
                 const formData = new FormData();
@@ -138,18 +172,18 @@ const AddProduct = () => {
                         'Content-Type': 'multipart/form-data',
                     }
                 },);
-            toast.success("Prodcut added")
-            if (response) {
-                navigate(`/product`);
-            }
+                toast.success("Prodcut added")
+                if (response) {
+                    navigate(`/product`);
+                }
             } catch (error) {
                 console.log(error);
                 toast.error(error.response.data);
-            // Handle login failure
-        }
-    }else {
+                // Handle login failure
+            }
+        } else {
             onUpdate();
-    }
+        }
     };
 
     const handleFileChange = (event) => {
@@ -161,7 +195,7 @@ const AddProduct = () => {
     };
     const convertToBlob = (file) => {
         const reader = new FileReader();
-        
+
         reader.onloadend = () => {
             // Check if reader.result is properly loaded
             const arrayBuffer = reader.result;
@@ -184,13 +218,19 @@ const AddProduct = () => {
         reader.readAsArrayBuffer(file); // Read the file as an array buffer
     };
 
-
+    const handleDeleteVariantType = (id) => {
+        console.log(id, selectedVariants);
+        const updatedTypes = selectedVariants.splice(id, 1);
+        setAvailableVariants(updatedTypes);
+    }
 
     return (
         <div className="product-details-container">
-            <h3 className="head">Add New Product</h3>
-
             <form onSubmit={handleSubmit} className="product-details-form">
+                {/* Submit Button */}
+                <button type="submit" className="btn-submit product-button">
+                    {buttonLabel}
+                </button>
                 <div className="form-box">
                     {/* Section 1: Product Details */}
                     <div className="section section-1">
@@ -206,27 +246,8 @@ const AddProduct = () => {
                                 disabled={id !== 0}
                             />
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="description">Product Description</label>
-                            <textarea
-                                id="description"
-                                name="description"
-                                value={productData.description}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="price">Product Price</label>
-                            <input
-                                type="number"
-                                id="price"
-                                name="price"
-                                value={productData.price}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
+                        
+                       
                         <div className="form-group">
                             <label htmlFor="manufacture">Manufacture Date</label>
                             <input
@@ -238,10 +259,6 @@ const AddProduct = () => {
                                 required
                             />
                         </div>
-                    </div>
-
-                    {/* Section 2: Wood Details & Additional Information */}
-                    <div className="section section-2">
                         <div className="form-group">
                             <label htmlFor="stock">Stock</label>
                             <input
@@ -249,6 +266,19 @@ const AddProduct = () => {
                                 id="stock"
                                 name="stock"
                                 value={productData.stock}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="">
+                            <label htmlFor="woodPrice">Is featured </label>
+                            <input
+                                type="checkbox"
+                                id="featured"
+                                name="featured"
+                                className="featured"
+                                value={productData.isFeatured}
+                                checked={productData.isFeatured}
                                 onChange={handleChange}
                                 required
                             />
@@ -265,7 +295,7 @@ const AddProduct = () => {
                             >
                                 <option value="">Select Wood Type</option>
                                 {woodTypes.map((wood) => (
-                                    <option key={wood.id} value={wood.id}>
+                                    <option key={wood.id} value={wood}>
                                         {wood.woodname}
                                     </option>
                                 ))}
@@ -280,8 +310,14 @@ const AddProduct = () => {
                                 value={productData.woodPrice}
                                 onChange={handleChange}
                                 required
+                                disabled
                             />
                         </div>
+
+                    </div>
+
+                    {/* Section 2: Wood Details & Additional Information */}
+                    <div className="section section-2">
                         <div className="form-group">
                             <label htmlFor="length">Wood Length (cm)</label>
                             <input
@@ -337,6 +373,21 @@ const AddProduct = () => {
                                 required
                             />
                         </div>
+                        <div className="form-group">
+                            <label htmlFor="price">Product Total Price</label>
+                            <input
+                                type="number"
+                                id="price"
+                                name="price"
+                                value={productData.price}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                       
+                       
+                    </div>
+                    <div className="section section-2">
 
                         {/* Image Upload */}
                         <div className="form-group">
@@ -344,13 +395,88 @@ const AddProduct = () => {
                             <input type="file" accept="image/*" onChange={handleFileChange} />
                             {imageURL && <img src={imageURL} alt="Uploaded" style={{ width: '200px', height: 'auto' }} />}
                         </div>
+                        <div className="form-group">
+                            <label htmlFor="description">Product Description</label>
+                            <textarea
+                                id="description"
+                                name="description"
+                                value={productData.description}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        
                     </div>
                 </div>
 
-                {/* Submit Button */}
-                <button type="submit" className="btn-submit product-button">
-                    {buttonLabel}
-                </button>
+
+                {/* Variant Selection Table */}
+                <div className="variant-selection">
+                    <h4>Select Variants</h4>
+                    <button type="button" onClick={handleAddVariant}>
+                        Add Variant Row
+                    </button>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Variant Type</th>
+                                <th>Variant Values</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {selectedVariants.length > 0 ? (selectedVariants.map((variant, index) => (
+                                <tr key={index}>
+                                    <td>
+                                        <select
+                                            value={variant.type}
+                                            onChange={(e) => handleVariantChange(index, e.target.value, variant.values)}
+                                        >
+                                            <option value="">Select Variant Type</option>
+                                            {availableVariants.map((availableVariant, i) => (
+                                                <option key={i} value={availableVariant.type}>
+                                                    {availableVariant.type}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        {variant.type && (
+                                            <select
+                                                
+                                                value={variant.values}
+                                                onChange={(e) =>
+                                                    handleVariantChange(
+                                                        index,
+                                                        variant.type,
+                                                        Array.from(e.target.selectedOptions, (option) => option.value)
+                                                    )
+                                                }
+                                            >
+                                                {availableVariants
+                                                    .find((availableVariant) => availableVariant.type === variant.type)
+                                                    ?.values.map((value, i) => (
+                                                        <option key={i} value={value}>
+                                                            {value}
+                                                        </option>
+                                                    ))}
+                                            </select>
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        <button type="button" onClick={() => handleDeleteVariantType(index)} className="btn-view wood delete">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))): <tr>No data available</tr>}
+                        </tbody>
+                    </table>
+                </div>
+
+
+                
             </form>
         </div>
 

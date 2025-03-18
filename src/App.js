@@ -20,6 +20,8 @@ import { AuthContext, AuthProvider } from './component/auth/authContext';
 import OrderDetails from './component/order/order-details';
 import ListQuotation from './component/quotation/list-quotation';
 import AddQuotation from './component/quotation/add-quotation';
+import VariantTypeList from './component/product/list-variance';
+import VariantDetails from './component/product/variace-details';
 
 
 const App = ()=>{
@@ -36,6 +38,8 @@ const App = ()=>{
                         <Route path="/dashboard" element={ <Dashboard />} />
                         <Route path="/driver" element={<Driver />} />
                         <Route path="/product" element={<Product />} />
+                        <Route path="/variance" element={<VariantTypeList />} />
+                        <Route path="/variant-details/:id" element={<VariantDetails />} />
                         <Route path="/add-product/:id" element={<AddProduct />} />
                         <Route path="/add-driver/:id" element={<AddDriver />} />
                         <Route path="/customer" element={<Customer />} />

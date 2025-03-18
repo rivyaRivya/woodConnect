@@ -1,23 +1,24 @@
 ﻿.product-details-container {
-    max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
 }
+
 
 .product-details-form {
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
-
+.product-details-form button {
+    margin: 0 0 0 auto;
+}
 .form-box {
     display: flex;
     justify-content: space-between;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-top: 20px;
+    padding: 0px 20px;
     gap: 20px;
     border-radius: 8px;
+    width: -webkit-fill-available;
 }
 
 .section {
@@ -42,13 +43,14 @@ input, select, textarea {
     }
 
 button.btn-submit {
-    padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #4CAF50;
     color: white;
+    padding: 10px;
     border: none;
     cursor: pointer;
     border-radius: 4px;
-    margin-top: 20px;
+    margin-top: 10px;
+    width: 300px;
 }
 
     button.btn-submit:hover {
@@ -67,4 +69,54 @@ h5 {
 input:focus, select:focus, textarea:focus {
     outline: none;
     border-color: #007bff;
+}
+.wood-form {
+    max-width: 300px;
+    margin: 0 auto;
+}
+form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 10px;
+    width: 300px;
+}
+
+.variant-selection table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.variant-selection th,
+.variant-selection td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.variant-selection th {
+    background-color: #f2f2f2;
+}
+
+.variant-selection td select {
+    width: 100%;
+}
+
+    .variant-selection td select[multiple] {
+        height: 100px;
+    }
+.variant-selection {
+    width: 100%;
+}
+.variant-selection button{
+    margin: 0 0 0 auto;
+}
+
+.featured {
+    top: -22px;
+    position: relative;
 }
