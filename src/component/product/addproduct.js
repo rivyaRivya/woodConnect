@@ -270,7 +270,7 @@ const AddProduct = () => {
                                 required
                             />
                         </div>
-                        <div className="">
+                        <div className="form-group">
                             <label htmlFor="woodPrice">Is featured </label>
                             <input
                                 type="checkbox"
