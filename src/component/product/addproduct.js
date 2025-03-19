@@ -43,22 +43,36 @@ const AddProduct = () => {
         }
     }
 
-
     const fetchVariantData = async () => {
         try {
-            // Simulated API response
-            const response = {
-                variantTypes: [
-                    { type: 'Size', values: ['Small', 'Medium', 'Large'] },
-                    { type: 'Color', values: ['Red', 'Blue', 'Green'] },
-                ],
-            };
+            // Make an API call to the Spring Boot backend login endpoint
+            const response = await axios.get('http://localhost:8080/get-variant');
 
-            setAvailableVariants(response.variantTypes);
+            if (response) {
+                console.log(response)
+                setAvailableVariants(response.data);
+            }
         } catch (error) {
-            console.error('Error fetching variant data:', error);
+            console.log("rrrrrrrrrrrrrrr")
+            toast.error(error);
         }
-    };
+    }
+
+    //const fetchVariantData = async () => {
+    //    try {
+    //        // Simulated API response
+    //        const response = {
+    //            variantTypes: [
+    //                { type: 'Size', values: ['Small', 'Medium', 'Large'] },
+    //                { type: 'Color', values: ['Red', 'Blue', 'Green'] },
+    //            ],
+    //        };
+
+    //        setAvailableVariants(response.variantTypes);
+    //    } catch (error) {
+    //        console.error('Error fetching variant data:', error);
+    //    }
+    //};
 
     // Fetch wood types dynamically from API
     const fetchWoodTypes = async () => {
@@ -124,6 +138,7 @@ const AddProduct = () => {
         }
         fetchVariantData();
         fetchWoodTypes();
+
     }, []);
 
 
@@ -456,8 +471,8 @@ const AddProduct = () => {
                                                 {availableVariants
                                                     .find((availableVariant) => availableVariant.type === variant.type)
                                                     ?.values.map((value, i) => (
-                                                        <option key={i} value={value}>
-                                                            {value}
+                                                        <option key={i} value={value.id}>
+                                                            {value.name}
                                                         </option>
                                                     ))}
                                             </select>

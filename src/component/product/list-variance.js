@@ -100,7 +100,7 @@ const VariantTypeList = () => {
                 <tbody>
                     {variantTypes.map((variant) => (
                         <tr key={variant.id}>
-                            <td>{variant.name}</td>
+                            <td>{variant.type}</td>
                             <td>
                                 <button onClick={() => handleDeleteVariantDetails(variant.id)} className="btn-view wood add">
                                     Details

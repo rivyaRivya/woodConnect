@@ -18,7 +18,7 @@ const VariantDetails = () => {
             const response = await axios.get(`http://localhost:8080/variant-details?id=${id}`); // Adjust API URL
             console.log(response.data)
             if (response)
-                setVariantTypes(response.data.variant);
+                setVariantTypes(response.data.values);
         } catch (error) {
             console.error("Error fetching wood types", error);
         }
@@ -53,7 +53,7 @@ const VariantDetails = () => {
                 console.log(response)
                 // Add the new variant type to the list
                 setVariantTypes((prevTypes) => [...prevTypes, newVariant]);
-
+                getVariantDetails();
                 // Reset the input field
                 setNewVariantType('');
             }
