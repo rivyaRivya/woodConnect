@@ -1,20 +1,38 @@
 // src/components/VariantTypeList.js
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const VariantTypeList = () => {
     const navigate = useNavigate();
     // Example data for variant types (size, color, etc.)
-    const [variantTypes, setVariantTypes] = useState([
-        { id: 1, name: 'Size' },
-        { id: 2, name: 'Color' },
-    ]);
+    const [variantTypes, setVariantTypes] = useState([]);
 
     const [newVariantType, setNewVariantType] = useState('');
 
+    const listVariant = async() => {
+        try {
+            // Make an API call to the Spring Boot backend login endpoint
+            const response = await axios.get('http://localhost:8080/get-variant');
+
+            if (response) {
+                console.log(response)
+                setVariantTypes(response.data);
+            }
+        } catch (error) {
+            console.log("rrrrrrrrrrrrrrr")
+            toast.error(error);
+        }
+    }
+
+    useEffect(() => {
+        listVariant();
+    }, []);  //calling while loading
+
     // Handle adding new variant type
-    const handleAddVariantType = (e) => {
+    const handleAddVariantType = async(e) => {
         e.preventDefault();
 
         if (!newVariantType) {
@@ -24,21 +42,45 @@ const VariantTypeList = () => {
 
         // Create a new variant type object
         const newVariant = {
-            id: Date.now(), // using timestamp as unique ID
             name: newVariantType,
         };
-
-        // Add the new variant type to the list
-        setVariantTypes((prevTypes) => [...prevTypes, newVariant]);
-
-        // Reset the input field
-        setNewVariantType('');
+        try {
+            // Make an API call to the Spring Boot backend login endpoint
+            const response = await axios.post('http://localhost:8080/variant', newVariant);
+            toast.success("Variant added")
+            if (response) {
+                console.log(response)
+                // Add the new variant type to the list
+                setVariantTypes((prevTypes) => [...prevTypes, newVariant]);
+                listVariant();
+                // Reset the input field
+                setNewVariantType('');
+            }
+        } catch (error) {
+            console.log("rrrrrrrrrrrrrrr")
+            toast.error(error);
+            // Handle login failure
+        }
+        
     };
 
     // Handle deleting a variant type
-    const handleDeleteVariantType = (id) => {
-        const updatedTypes = variantTypes.filter((variant) => variant.id !== id);
-        setVariantTypes(updatedTypes);
+    const handleDeleteVariantType = async(id) => {
+        try {
+            // Make an API call to the Spring Boot backend login endpoint
+            const response = await axios.delete(`http://localhost:8080/delete-variant/${id}`);
+
+            if (response) {
+                const updatedTypes = variantTypes.filter((variant) => variant.id !== id);
+                setVariantTypes(updatedTypes);
+                console.log(response)
+            }
+        } catch (error) {
+            console.log("rrrrrrrrrrrrrrr")
+            toast.error(error);
+            // Handle login failure
+        }
+       
     };
 
     const handleDeleteVariantDetails = (id) => {

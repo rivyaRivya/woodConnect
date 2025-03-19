@@ -5,12 +5,11 @@
     "\\src\\component",
     "\\src\\component\\auth",
     "\\src\\component\\customer",
-    "\\src\\component\\driver",
-    "\\src\\component\\order",
     "\\src\\component\\product",
     "\\src\\component\\quotation",
-    "\\src\\component\\settings"
+    "\\src\\component\\settings",
+    "\\src\\component\\shared"
   ],
-  "SelectedNode": "\\src\\component\\product\\addProduct.css",
+  "SelectedNode": "\\src\\component\\quotation\\quotation.css",
   "PreviewInSolutionExplorer": false
 }
