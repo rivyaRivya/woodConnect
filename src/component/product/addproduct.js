@@ -156,10 +156,10 @@ const AddProduct = () => {
 
     // Handle dropdown selection change
     const handleDropdownChange = (e) => {
-        console.log(e)
-        console.log(e.target.value.id, e.target.value.price);
-        productData.woodType_id = e.target.value.id;
-        productData.woodPrice = e.target.value.price;
+        console.log(woodTypes);
+        const selectedObject = woodTypes.find(item => item.id === parseInt(e.target.value));
+        productData.woodType_id = selectedObject.id;
+        productData.woodPrice = selectedObject.price;
         console.log(productData)
     };
 
@@ -178,10 +178,16 @@ const AddProduct = () => {
                 formData.append('productname', productData.productname);
                 formData.append('description', productData.description);
                 formData.append('price', productData.price);
-                formData.append('woodType_id', productData.woodType_id);
+                formData.append('woodType_id', parseInt(productData.woodType_id));
                 formData.append('image', image);
                 formData.append('manufacture', productData.manufacture);
                 formData.append('stock', productData.stock);
+                formData.append('manufacturePrice', productData.manufacturePrice);
+                formData.append('length', productData.length);
+                formData.append('width', productData.width);
+                formData.append('labourPrice', productData.labourPrice);
+                formData.append('isFeatured', productData.isFeatured);
+                formData.append('variant', JSON.stringify(selectedVariants));
                 const response = await axios.post('http://localhost:8080/product', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
@@ -310,7 +316,7 @@ const AddProduct = () => {
                             >
                                 <option value="">Select Wood Type</option>
                                 {woodTypes.map((wood) => (
-                                    <option key={wood.id} value={wood}>
+                                    <option key={wood.id} value={wood.id}>
                                         {wood.woodname}
                                     </option>
                                 ))}
