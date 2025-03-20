@@ -258,7 +258,7 @@ const AddProduct = () => {
                                 value={productData.productname}
                                 onChange={handleChange}
                                 required
-                                disabled={id !== 0}
+                                disabled={id != 0}
                             />
                         </div>
                         
