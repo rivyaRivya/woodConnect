@@ -383,17 +383,7 @@ const AddProduct = () => {
                                 required
                             />
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="addingtionalCharge">Additional Charge</label>
-                            <input
-                                type="number"
-                                id="addingtionalCharge"
-                                name="addingtionalCharge"
-                                value={productData.addingtionalCharge}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
+                       
                         <div className="form-group">
                             <label htmlFor="price">Product Total Price</label>
                             <input
