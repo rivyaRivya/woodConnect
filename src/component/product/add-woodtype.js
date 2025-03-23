@@ -15,13 +15,20 @@ const AddWoodType = () => {
     });
     const [buttonLabel, setButtonLabel] = useState("Add Wood");
 
+    const [image, setImage] = useState(null);
+    const [imageBlob, setImageBlob] = useState(null);
+    const [imageURL, setImageURL] = useState(null);
     const navigate = useNavigate();
     const getWoodDetails = async () => {
         try {
             const response = await axios.get(`http://localhost:8080/woodType-details?id=${id}`); // Adjust API URL
             console.log(response.data)
-            if (response)
+            if (response) {
                 setWoodData(response.data);
+                const imageUrl = `data:image/png;base64,${response.data.image}`;
+
+                setImageURL(imageUrl);
+            }
             console.log("ssssssssssss", woodData);
         } catch (error) {
             console.error("Error fetching wood types", error);
@@ -45,8 +52,13 @@ const AddWoodType = () => {
             // Add the product using the passed onAddProduct function
             // Reset the form after submission
             try {
+                const formData = new FormData();
+
+                formData.append('price', woodData.price);
+                formData.append('woodName', woodData.price);
+                formData.append('image', image);
                 // Make an API call to the Spring Boot backend login endpoint
-                const response = await axios.post('http://localhost:8080/wood-type', woodData);
+                const response = await axios.post('http://localhost:8080/wood-type', formData);
                 toast.success("Wood added")
                 if (response) {
                     console.log(response)
@@ -69,7 +81,12 @@ const AddWoodType = () => {
     const onUpdate = async () => {
         try {
             // Make an API call to the Spring Boot backend login endpoint
-            const response = await axios.put(`http://localhost:8080/wood-type/${id}`, woodData);
+            const formData = new FormData();
+
+            formData.append('price', woodData.price);
+            formData.append('woodName', woodData.price);
+            formData.append('image', image);
+            const response = await axios.put(`http://localhost:8080/wood-type/${id}`, formData);
             if (response) {
                 console.log(response)
                 navigate(`/wood-type`);
@@ -88,6 +105,16 @@ const AddWoodType = () => {
         }
     }, []);
 
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const previewURL = URL.createObjectURL(file);
+            setImageURL(previewURL);
+            setImage(file);
+        }
+    };
+   
     return (
         <div className="product-form-container">
             <h2>Add New Wood</h2>
@@ -105,7 +132,7 @@ const AddWoodType = () => {
                     />
                     </div>
                 <div className="form-group">
-                    <label htmlFor="price">Wood Price</label>
+                    <label htmlFor="price">Wood Price(in Kol,1Kol=72cm)</label>
                     <input
                         type="number"
                         id="price"
@@ -114,7 +141,15 @@ const AddWoodType = () => {
                         onChange={handleChange}
                         required
                     />
-               </div>
+                </div>
+
+                {/* Image Upload */}
+                <div className="form-group">
+                    <h5>Upload Wood Image</h5>
+                    <input type="file" accept="image/*" onChange={handleFileChange} />
+                    {imageURL && <img src={imageURL} alt="Uploaded" style={{ width: '200px', height: 'auto' }} />}
+                </div>
+                
                 <button type="submit" className="btn-submit product-button">{buttonLabel}</button>
             </form>
         </div>

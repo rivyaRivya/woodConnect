@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useRef, useState } from 'react';
 import './addProduct.css'
 import axios from 'axios';
 import { toast } from 'react-toastify'
@@ -8,7 +9,8 @@ const AddProduct = () => {
     const { id } = useParams();
     const [availableVariants, setAvailableVariants] = useState([]); // Variant types and values from API
     const [selectedVariants, setSelectedVariants] = useState([]); // Stores selected variant types and their values
-
+    const [woodPrice, setWoodPrice] = useState([]);
+    const [featured, setIsfeatured] = useState(false);
     const [buttonLabel, setButtonLabel] = useState("Add product");
     const navigate = useNavigate();
     const [image, setImage] = useState(null);
@@ -27,17 +29,22 @@ const AddProduct = () => {
         labourPrice: null,
         manufacturePrice: null,
         woodPrice: null,
-        isFeatured : null
+        featured: false
     });
     const [woodTypes, setWoodTypes] = useState([]); // State to store wood types
 
     const getProductDetails = async () => {
         try {
             const response = await axios.get(`http://localhost:8080/product-details?id=${id}`); // Adjust API URL
-            if (response)
+            if (response) {
                 setProductData(response.data);
-            const imageUrl = `data:image/png;base64,${response.data.image}`;
-            setImageURL(imageUrl);
+                const imageUrl = `data:image/png;base64,${response.data.image}`;
+                if (response.data.variant)
+                    setSelectedVariants(JSON.parse(response.data.variant));
+                setWoodPrice(response.data.woodPrice);
+                setIsfeatured(response.data.featured);
+                setImageURL(imageUrl);
+            }
         } catch (error) {
             console.error("Error fetching product types", error);
         }
@@ -49,7 +56,6 @@ const AddProduct = () => {
             const response = await axios.get('http://localhost:8080/get-variant');
 
             if (response) {
-                console.log(response)
                 setAvailableVariants(response.data);
             }
         } catch (error) {
@@ -57,22 +63,6 @@ const AddProduct = () => {
             toast.error(error);
         }
     }
-
-    //const fetchVariantData = async () => {
-    //    try {
-    //        // Simulated API response
-    //        const response = {
-    //            variantTypes: [
-    //                { type: 'Size', values: ['Small', 'Medium', 'Large'] },
-    //                { type: 'Color', values: ['Red', 'Blue', 'Green'] },
-    //            ],
-    //        };
-
-    //        setAvailableVariants(response.variantTypes);
-    //    } catch (error) {
-    //        console.error('Error fetching variant data:', error);
-    //    }
-    //};
 
     // Fetch wood types dynamically from API
     const fetchWoodTypes = async () => {
@@ -88,10 +78,37 @@ const AddProduct = () => {
     // Handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setProductData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+
+        setProductData((prevData) => {
+            const updatedData = {
+                ...prevData,
+                [name]: e.target.type === "number" ? parseFloat(value) || 0 : value,
+            };
+
+            // Call calculatePrice whenever relevant fields change
+            if (["length", "width", "woodPrice", "manufacturePrice", "labourPrice"].includes(name)) {
+                calculatePrice(updatedData);
+            }
+
+            return updatedData;
+        });
+    };
+    const calculatePrice = (data) => {
+        const { length, width, woodPrice, manufacturePrice, labourPrice } = data;
+
+        if (woodPrice && length && width && manufacturePrice && labourPrice) {
+            const woodCost = ((woodPrice * (length * width * width)) / 16) * 35.33;
+            const totalPrice = parseInt(woodCost) + parseInt(manufacturePrice) + parseInt(labourPrice);
+
+            setProductData(prevData => ({
+                ...prevData,
+                price: totalPrice.toFixed(2)
+            }));
+        }
+    };
+
+    const handleChanges = (e) => {
+        setIsfeatured(!featured);
     };
 
     const onUpdate = async () => {
@@ -110,6 +127,9 @@ const AddProduct = () => {
             formData.append('length', productData.length);
             formData.append('width', productData.width);
             formData.append('labourPrice', productData.labourPrice);
+
+            formData.append('isFeatured', featured);
+            formData.append('variant', JSON.stringify(selectedVariants));
 
             const response = await axios.put(`http://localhost:8080/update-product/${id}`, formData, {
                 headers: {
@@ -138,29 +158,46 @@ const AddProduct = () => {
         }
         fetchVariantData();
         fetchWoodTypes();
-
+        
     }, []);
 
 
     const handleAddVariant = () => {
-        const newVariant = { type: '', values: [] };
+        const newVariant = { type: '',id:null, values: [] };
         setSelectedVariants([...selectedVariants, newVariant]);
     };
 
-    // Handle selecting a variant type and its values
     const handleVariantChange = (index, type, selectedValues) => {
+
+        // Create a new object with the selected variant format
         const updatedVariants = [...selectedVariants];
-        updatedVariants[index] = { type, values: selectedValues };
+
+        updatedVariants[index] = {
+            id: index + 1, // You can generate a new ID here, or use an existing one
+            type: type,
+            values: selectedValues.map(valueId => ({
+                id: valueId,
+                name: availableVariants
+                    .find(variant => variant.type === type)
+                    ?.values.find(val => val.id === valueId)?.name || ""
+            }))
+        };
+
         setSelectedVariants(updatedVariants);
     };
 
-    // Handle dropdown selection change
+    const handleDeleteVariantType = (index) => {
+        const updatedVariants = selectedVariants.filter((_, i) => i !== index);
+        setSelectedVariants(updatedVariants);
+    };
+
     const handleDropdownChange = (e) => {
-        console.log(woodTypes);
         const selectedObject = woodTypes.find(item => item.id === parseInt(e.target.value));
-        productData.woodType_id = selectedObject.id;
-        productData.woodPrice = selectedObject.price;
-        console.log(productData)
+        productData.woodType_id = selectedObject?.id;
+        productData.woodPrice = parseFloat(selectedObject?.price);
+        setWoodPrice(productData.woodPrice);
+        setProductData(productData);
+        calculatePrice(productData);
     };
 
 
@@ -186,7 +223,7 @@ const AddProduct = () => {
                 formData.append('length', productData.length);
                 formData.append('width', productData.width);
                 formData.append('labourPrice', productData.labourPrice);
-                formData.append('isFeatured', productData.isFeatured);
+                formData.append('isFeatured', featured);
                 formData.append('variant', JSON.stringify(selectedVariants));
                 const response = await axios.post('http://localhost:8080/product', formData, {
                     headers: {
@@ -238,12 +275,6 @@ const AddProduct = () => {
 
         reader.readAsArrayBuffer(file); // Read the file as an array buffer
     };
-
-    const handleDeleteVariantType = (id) => {
-        console.log(id, selectedVariants);
-        const updatedTypes = selectedVariants.splice(id, 1);
-        setAvailableVariants(updatedTypes);
-    }
 
     return (
         <div className="product-details-container">
@@ -298,10 +329,9 @@ const AddProduct = () => {
                                 id="featured"
                                 name="featured"
                                 className="featured"
-                                value={productData.isFeatured}
-                                checked={productData.isFeatured}
-                                onChange={handleChange}
-                                required
+                                value={featured}
+                                checked={featured}
+                                onChange={handleChanges}
                             />
                         </div>
                         <div className="form-group">
@@ -323,12 +353,12 @@ const AddProduct = () => {
                             </select>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="woodPrice">Wood Price</label>
+                            <label htmlFor="woodPrice">Wood Price (in Kol,1Kol=72cm)</label>
                             <input
                                 type="number"
                                 id="woodPrice"
                                 name="woodPrice"
-                                value={productData.woodPrice}
+                                value={woodPrice}
                                 onChange={handleChange}
                                 required
                                 disabled
@@ -379,7 +409,7 @@ const AddProduct = () => {
                                 id="labourPrice"
                                 name="labourPrice"
                                 value={productData.labourPrice}
-                                onChange={handleChange}
+                                onInput={handleChange}
                                 required
                             />
                         </div>
@@ -393,6 +423,7 @@ const AddProduct = () => {
                                 value={productData.price}
                                 onChange={handleChange}
                                 required
+                                disabled
                             />
                         </div>
                        
@@ -436,52 +467,62 @@ const AddProduct = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {selectedVariants.length > 0 ? (selectedVariants.map((variant, index) => (
-                                <tr key={index}>
-                                    <td>
-                                        <select
-                                            value={variant.type}
-                                            onChange={(e) => handleVariantChange(index, e.target.value, variant.values)}
-                                        >
-                                            <option value="">Select Variant Type</option>
-                                            {availableVariants.map((availableVariant, i) => (
-                                                <option key={i} value={availableVariant.type}>
-                                                    {availableVariant.type}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </td>
-                                    <td>
-                                        {variant.type && (
+                            {selectedVariants.length > 0 ? (
+                                selectedVariants.map((variant, index) => (
+                                    <tr key={index}>
+                                        <td>
                                             <select
-                                                
-                                                value={variant.values}
-                                                onChange={(e) =>
-                                                    handleVariantChange(
-                                                        index,
-                                                        variant.type,
-                                                        Array.from(e.target.selectedOptions, (option) => option.value)
-                                                    )
-                                                }
+                                                value={variant.type}
+                                                onChange={(e) => handleVariantChange(index, e.target.value, variant.values.map(v => v.id))}
                                             >
-                                                {availableVariants
-                                                    .find((availableVariant) => availableVariant.type === variant.type)
-                                                    ?.values.map((value, i) => (
-                                                        <option key={i} value={value.id}>
-                                                            {value.name}
-                                                        </option>
-                                                    ))}
+                                                <option value="">Select Variant Type</option>
+                                                {availableVariants.map((availableVariant, i) => (
+                                                    <option key={i} value={availableVariant.type}>
+                                                        {availableVariant.type}
+                                                    </option>
+                                                ))}
                                             </select>
-                                        )}
-                                    </td>
+                                        </td>
+                                        <td>
+                                            {variant.type && (
+                                                <select
+                                                    value={variant.values.map(val => val.id)}
+                                                    onChange={(e) =>
+                                                        handleVariantChange(
+                                                            index,
+                                                            variant.type,
+                                                            Array.from(e.target.selectedOptions, (option) => option.value)
+                                                        )
+                                                    }
+                                                >
+                                                    <option value="">Select Variant value</option>
+                                                    {availableVariants
+                                                        .find((availableVariant) => availableVariant.type === variant.type)
+                                                        ?.values.map((value, i) => (
 
-                                    <td>
-                                        <button type="button" onClick={() => handleDeleteVariantType(index)} className="btn-view wood delete">
-                                            Delete
-                                        </button>
-                                    </td>
+                                                            <option key={i} value={value.id}>
+                                                                {value.name}
+                                                            </option>
+                                                        ))}
+                                                </select>
+                                            )}
+                                        </td>
+                                        <td>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleDeleteVariantType(index)}
+                                                className="btn-view wood delete"
+                                            >
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="3">No data available</td>
                                 </tr>
-                            ))): <tr>No data available</tr>}
+                            )}
                         </tbody>
                     </table>
                 </div>

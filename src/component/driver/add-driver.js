@@ -3,12 +3,14 @@ import './driver.css'
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
+//import RNFS from 'react-native-fs';
 
 const AddDriver = () => {
     const { id } = useParams();
 
     const [buttonLabel, setButtonLabel] = useState("Add Driver");
-
+    const [pdfFile, setPdfFile] = useState(null);
+    const [fileName, setFileName] = useState('');
     const navigate = useNavigate();
     const [driverData, setDriverData] = useState({
         firstname: '',
@@ -29,8 +31,14 @@ const AddDriver = () => {
         try {
             const response = await axios.get(`http://localhost:8080/user-details?id=${id}`); // Adjust API URL
             console.log(response.data)
-            if (response)
+            if (response) {
                 setDriverData(response.data);
+
+                const blob = new Blob([response.data.file], { type: "application/pdf" });
+                const fileURL = URL.createObjectURL(blob);
+                setPdfFile(fileURL);
+                setFileName("driver_license.pdf"); 
+            }
         } catch (error) {
             console.error("Error fetching product types", error);
         }
@@ -59,6 +67,29 @@ const AddDriver = () => {
             // Handle login failure
         }
     }
+
+    // Handle file selection
+    const handleFileChange = (event) => {
+        const selectedFile = event.target.files[0];
+
+        // Check if the selected file is a PDF
+        if (selectedFile && selectedFile.type === 'application/pdf') {
+            setPdfFile(selectedFile);
+            setFileName(selectedFile.name); // Store file name for display
+        } else {
+            // Handle invalid file type
+            alert('Please upload a PDF file.');
+        }
+    };
+
+    const handleFileUpload = () => {
+        //const path = RNFS.DocumentDirectoryPath + '/' + "hhh.pdf";
+
+        //// Write the file to the local storage
+        //RNFS.writeFile(path, pdfFile, 'base64');
+    };
+
+
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -67,7 +98,25 @@ const AddDriver = () => {
                 // Make an API call to the Spring Boot backend login endpoint
                 driverData.password = driverData.phone;
                 driverData.type = "driver";
-                const response = await axios.post('http://localhost:8080/user', driverData);
+                if (!pdfFile) {
+                    alert('Please upload a License file in pdf format!');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('file', pdfFile);
+                formData.append('firstname', driverData.firstname);
+                formData.append('lastname', driverData.lastname);
+                formData.append('address', driverData.address);
+                formData.append('email', driverData.email);
+                formData.append('dob', driverData.dob);
+                formData.append('phone', driverData.phone);
+                formData.append('gender', driverData.gender);
+                formData.append('pin', driverData.pin);
+                formData.append('district', driverData.district);
+                formData.append('type', driverData.type);
+                formData.append('password', driverData.password);
+                const response = await axios.post('http://localhost:8080/user', formData);
 
                 if (response) {
                     console.log(response)
@@ -219,7 +268,29 @@ const AddDriver = () => {
                                 required
                             />
                         </div>
-                        
+                        <div>
+
+                            {pdfFile && (
+                                <div>
+                                    <h4>Driver License</h4>
+                                    <a href={pdfFile} download={fileName}>
+                                        <button type="button" className="btn-download">Download File</button>
+                                    </a>
+                                </div>
+                            )}
+                            <h4>Upload license in pdf format</h4>
+
+                            {/* File input to select PDF */}
+                            <input
+                                type="file"
+                                onChange={handleFileChange}
+                                accept="application/pdf"
+                            />
+
+                            {/* Show the file name once a file is selected */}
+                            {fileName && <p>Selected file: {fileName}</p>}
+
+                        </div>
                     </div>
                 </div>
 

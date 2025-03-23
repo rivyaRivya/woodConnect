@@ -39,10 +39,16 @@ const Login = () => {
 
                 // Handle successful login (e.g., save token to local storage or redirect)
                 if (response) {
-                    setIsLoggedIn(true);
-                    login();
-                    navigate("/dashboard");
-                    toast.success('Login successful!');
+                    console.log(response);
+                    if (response.data === 0) {
+                        setIsLoggedIn(false);
+                        toast.error('Login failed,Invalid user credential!');
+                    } else {
+                        setIsLoggedIn(true);
+                        login();
+                        navigate("/dashboard");
+                        toast.success('Login successful!');
+                    }
                     // You can redirect to another page here, for example:
                     // window.location.href = '/dashboard';
                 }

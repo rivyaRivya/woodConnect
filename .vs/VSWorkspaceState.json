@@ -5,11 +5,12 @@
     "\\src\\component",
     "\\src\\component\\auth",
     "\\src\\component\\customer",
+    "\\src\\component\\driver",
     "\\src\\component\\product",
     "\\src\\component\\quotation",
     "\\src\\component\\settings",
     "\\src\\component\\shared"
   ],
-  "SelectedNode": "\\src\\component\\product\\addproduct.js",
+  "SelectedNode": "\\src\\component\\customer\\customer.js",
   "PreviewInSolutionExplorer": false
 }

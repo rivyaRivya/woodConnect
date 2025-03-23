@@ -137,10 +137,10 @@ const OrderDetails = () => {
                             <div className="order-info-item">
                                 <strong>Delivery Date:</strong>
                                 <input
-                                    type="orderdetail.deliverydate"
+                                    type="date"
                                     id="orderdetail.deliverydate"
                                     name="orderdetail.deliverydate"
-                                    value={orderDetails.deliverydate}
+                                    value={orderDetails.delivery_date}
                                     onChange={handleChange}
                                     required
                                 />
@@ -183,7 +183,7 @@ const OrderDetails = () => {
                                 <h3 className="product-title">{prod.productname}</h3>
                                 <div className="product-details">
                                     <p><strong>Price:</strong> ₹{prod.price}</p>
-                                    <p><strong>Quantity:</strong> {prod.stock}</p>
+                                    <p><strong>Quantity:</strong> {prod.quantity}</p>
                                     <p><strong>Manufacture Date:</strong> {prod.manufacture || 'N/A'}</p>
                                     <p><strong>Wood Name:</strong> {prod.woodtypename || 'N/A'}</p>
                                 </div>
