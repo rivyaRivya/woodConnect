@@ -55,7 +55,7 @@ const AddWoodType = () => {
                 const formData = new FormData();
 
                 formData.append('price', woodData.price);
-                formData.append('woodName', woodData.price);
+                formData.append('woodName', woodData.woodname);
                 formData.append('image', image);
                 // Make an API call to the Spring Boot backend login endpoint
                 const response = await axios.post('http://localhost:8080/wood-type', formData);
