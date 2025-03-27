@@ -79,7 +79,7 @@ const AddProduct = () => {
     // Handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
-
+        console.log("hhh")
         setProductData((prevData) => {
             const updatedData = {
                 ...prevData,
@@ -95,11 +95,13 @@ const AddProduct = () => {
         });
     };
     const calculatePrice = (data) => {
+        console.log("ddd", data)
         const { length, width, woodPrice, manufacturePrice, labourPrice, thickness } = data;
 
         if (woodPrice && length && width && manufacturePrice && labourPrice && thickness) {
 
-            const CFT = ((thickness * length * width * width)) / 28316.85;
+            const CFT = ((thickness * length * width)) / 28316.85;
+            console.log(CFT);
             const totalPrice = parseInt(CFT * woodPrice) + parseInt(manufacturePrice) + parseInt(labourPrice);
 
             setProductData(prevData => ({
