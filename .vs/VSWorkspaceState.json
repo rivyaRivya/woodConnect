@@ -7,10 +7,9 @@
     "\\src\\component\\driver",
     "\\src\\component\\order",
     "\\src\\component\\product",
-    "\\src\\component\\quotation",
     "\\src\\component\\settings",
     "\\src\\component\\shared"
   ],
-  "SelectedNode": "\\src\\component\\shared\\sideNav.js",
+  "SelectedNode": "\\src\\component\\product\\add-woodtype.js",
   "PreviewInSolutionExplorer": false
 }

@@ -26,6 +26,7 @@ const AddProduct = () => {
         image: null,
         width: null,
         length: null,
+        thickness:null,
         labourPrice: null,
         manufacturePrice: null,
         woodPrice: null,
@@ -86,7 +87,7 @@ const AddProduct = () => {
             };
 
             // Call calculatePrice whenever relevant fields change
-            if (["length", "width", "woodPrice", "manufacturePrice", "labourPrice"].includes(name)) {
+            if (["length", "width", "woodPrice", "manufacturePrice", "labourPrice","thickness"].includes(name)) {
                 calculatePrice(updatedData);
             }
 
@@ -94,11 +95,12 @@ const AddProduct = () => {
         });
     };
     const calculatePrice = (data) => {
-        const { length, width, woodPrice, manufacturePrice, labourPrice } = data;
+        const { length, width, woodPrice, manufacturePrice, labourPrice, thickness } = data;
 
-        if (woodPrice && length && width && manufacturePrice && labourPrice) {
-            const woodCost = ((woodPrice * (length * width * width)) / 16) * 35.33;
-            const totalPrice = parseInt(woodCost) + parseInt(manufacturePrice) + parseInt(labourPrice);
+        if (woodPrice && length && width && manufacturePrice && labourPrice && thickness) {
+
+            const CFT = ((thickness * length * width * width)) / 28316.85;
+            const totalPrice = parseInt(CFT * woodPrice) + parseInt(manufacturePrice) + parseInt(labourPrice);
 
             setProductData(prevData => ({
                 ...prevData,
@@ -130,6 +132,7 @@ const AddProduct = () => {
 
             formData.append('isFeatured', featured);
             formData.append('variant', JSON.stringify(selectedVariants));
+            formData.append('thickness', productData.thickness);
 
             const response = await axios.put(`http://localhost:8080/update-product/${id}`, formData, {
                 headers: {
@@ -224,6 +227,7 @@ const AddProduct = () => {
                 formData.append('width', productData.width);
                 formData.append('labourPrice', productData.labourPrice);
                 formData.append('isFeatured', featured);
+                formData.append('thickness', productData.thickness);
                 formData.append('variant', JSON.stringify(selectedVariants));
                 const response = await axios.post('http://localhost:8080/product', formData, {
                     headers: {
@@ -353,7 +357,7 @@ const AddProduct = () => {
                             </select>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="woodPrice">Wood Price (in Kol,1Kol=72cm)</label>
+                            <label htmlFor="woodPrice">Wood Price (28,316.85 cm³ = 1 cubic foot.)</label>
                             <input
                                 type="number"
                                 id="woodPrice"
@@ -387,6 +391,17 @@ const AddProduct = () => {
                                 id="width"
                                 name="width"
                                 value={productData.width}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="length">Thickness (cm)</label>
+                            <input
+                                type="number"
+                                id="thickness"
+                                name="thickness"
+                                value={productData.thickness}
                                 onChange={handleChange}
                                 required
                             />

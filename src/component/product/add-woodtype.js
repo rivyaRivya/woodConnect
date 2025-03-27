@@ -132,7 +132,7 @@ const AddWoodType = () => {
                     />
                     </div>
                 <div className="form-group">
-                    <label htmlFor="price">Wood Price(in Kol,1Kol=72cm)</label>
+                    <label htmlFor="price">Wood Price(28,316.85 cm³ = 1 cubic foot.)</label>
                     <input
                         type="number"
                         id="price"
