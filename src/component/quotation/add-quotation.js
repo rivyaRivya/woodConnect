@@ -67,7 +67,7 @@ const AddQuotation = () => {
             };
 
             // Call calculatePrice whenever relevant fields change
-            if (["manufacturingCost", "dimensions", "woodPrice", "discount"].includes(name)) {
+            if (["manufacturingCost", "dimensions", "woodPrice", "discount","quantity"].includes(name)) {
                 calculatePrice(updatedData);
             }
 
@@ -91,8 +91,9 @@ const AddQuotation = () => {
 
     const calculatePrice = (data) => {
         console.log("uuu")
-        const { manufacturingCost, dimensions, woodPrice, discount } = data;
+        const { manufacturingCost, dimensions, woodPrice, discount, quantity } = data;
         let woodPrices = parseFloat(woodPrice);
+        let quantityy = parseInt(quantity);
         let manufacturing = parseFloat(manufacturingCost) || 0;
         let dimPattern = /^\d+\*\d+\*\d+$/;
 
@@ -108,7 +109,7 @@ const AddQuotation = () => {
         let [L, H, W] = dimensions.split("*").map(Number);
         let volume = (L * H * W) / 28316.85;
         console.log(volume, manufacturing, woodPrices)
-        let total = (woodPrices * volume) + manufacturing;
+        let total = (woodPrices * volume * quantityy) + manufacturing;
 
         // Apply discount if available
         let discountAmount = parseFloat(discount) || 0;
