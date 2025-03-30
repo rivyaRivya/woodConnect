@@ -1,54 +1,94 @@
-.quotation-form-container {
-    width: 400px;
+.quotation-container {
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
+    background: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    background-color: #f9f9f9;
 }
 
 h2 {
     text-align: center;
-    color: #333;
+    margin-bottom: 20px;
 }
 
-.quotation-form {
+/* Split Container */
+.split-container {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
 }
 
+/* Left and Right Sections */
+.left-section, .right-section {
+    flex: 1;
+}
+
+/* Form Group Styling */
 .form-group {
     margin-bottom: 15px;
 }
 
-label {
-    font-weight: bold;
-}
-
-input, textarea {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-textarea {
-    resize: vertical;
-    min-height: 227px;
-    
-}
-
-button {
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-    button:hover {
-        background-color: #45a049;
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
     }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+/* Image Preview */
+.image-preview {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+/* Response Textarea */
+textarea {
+    height: 80px;
+    resize: vertical;
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.images {
+    height: 250px;
+    display: flex;
+}
+.btn-accept {
+    background: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-reject {
+    background: #f44336;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-accept:hover {
+    background: #45a049;
+}
+
+.btn-reject:hover {
+    background: #d32f2f;
+}

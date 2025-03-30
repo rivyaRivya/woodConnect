@@ -255,6 +255,7 @@ const AddProduct = () => {
         if (file) {
             convertToBlob(file);
             setImage(file);
+            console.log(file);
         }
     };
     const convertToBlob = (file) => {
