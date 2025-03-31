@@ -36,7 +36,6 @@ const ListQuotation = () => {
                     <tr>
                         <th>ID</th>
                         <th>Username</th>
-                        <th>Email</th>
                         <th>Mobile</th>
                         <th>Status</th>
                     </tr>
@@ -48,7 +47,6 @@ const ListQuotation = () => {
                             <tr key={user.id} onClick={() => handleRowClick(user.id)}>
                                 <td>{index+1}</td>
                                 <td>{user.username}</td>
-                                <td>{user.email}</td>
                                 <td>{user.mobile}</td>
                                 <td>{user.status}</td>
                             </tr>

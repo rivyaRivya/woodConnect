@@ -8,8 +8,9 @@
     "\\src\\component\\driver",
     "\\src\\component\\order",
     "\\src\\component\\product",
-    "\\src\\component\\settings",
+    "\\src\\component\\quotation",
     "\\src\\component\\shared"
   ],
+  "SelectedNode": "\\src\\component\\quotation\\quotation.css",
   "PreviewInSolutionExplorer": false
 }

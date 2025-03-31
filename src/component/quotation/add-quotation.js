@@ -25,7 +25,8 @@ const AddQuotation = () => {
         manufacturingCost: '',
         dimensions: '',
         totalPrice: '',
-        discount:''
+        discount: '',
+        productName:''
     });
     const [imageURL, setImageURL] = useState(null);
     const [woodTypes, setWoodTypes] = useState([]);
@@ -95,7 +96,8 @@ const AddQuotation = () => {
         let woodPrices = parseFloat(woodPrice);
         let quantityy = parseInt(quantity);
         let manufacturing = parseFloat(manufacturingCost) || 0;
-        let dimPattern = /^\d+\*\d+\*\d+$/;
+        let dimPattern = /^\d+(\.\d+)?\*\d+(\.\d+)?\*\d+(\.\d+)?$/;
+
 
         if (!dimPattern.test(dimensions)) {
             //setTotalPrice("Invalid format");
@@ -145,10 +147,10 @@ const AddQuotation = () => {
                         <label>Quantity</label>
                         <input type="email" name="email" disabled value={formData.quantity} disabled />
                     </div>
-                    <div className="form-group">
-                        <label>Color</label>
-                        <input type="email" name="email" disabled value={formData.color} disabled />
-                    </div>
+                    {/*<div className="form-group">*/}
+                    {/*    <label>Color</label>*/}
+                    {/*    <input type="email" name="email" disabled value={formData.color} disabled />*/}
+                    {/*</div>*/}
                 </div>
 
                 {/* Right Section */}
@@ -191,6 +193,7 @@ const AddQuotation = () => {
                                     id="productName"
                                     name="productName"
                                     value={formData.productName}
+                                    disabled
                                     onChange={handleChange}
                                     className="w-full p-1 border rounded"
                                 />
