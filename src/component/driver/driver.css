@@ -22,6 +22,7 @@
 .driver-form-container .left-section,
 .driver-form-container .right-section {
     width: 48%;
+    margin-right: 15px;
 }
 
 .driver-form-container .form-group {

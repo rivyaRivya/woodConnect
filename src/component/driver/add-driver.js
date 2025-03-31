@@ -29,15 +29,17 @@ const AddDriver = () => {
 
     const getDriverDetails = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/user-details?id=${id}`); // Adjust API URL
+            const response = await axios.get(`http://localhost:8080/user-details?id=${id}`, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            },);
             console.log(response.data)
             if (response) {
                 setDriverData(response.data);
 
-                const blob = new Blob([response.data.file], { type: "application/pdf" });
-                const fileURL = URL.createObjectURL(blob);
-                setPdfFile(fileURL);
-                setFileName("driver_license.pdf"); 
+                setPdfFile(response.data.file);
+                setFileName(response.data.fileName); 
             }
         } catch (error) {
             console.error("Error fetching product types", error);
@@ -68,6 +70,14 @@ const AddDriver = () => {
         }
     }
 
+    const downloadFile = () => {
+        const link = document.createElement("a");
+        link.href = `data:application/pdf;base64,${pdfFile}`;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
     // Handle file selection
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
@@ -158,7 +168,6 @@ const AddDriver = () => {
 
     return (
         <div className="driver-form-container">
-            <h2>Add New Driver</h2>
             <form onSubmit={handleSubmit} className="driver-form">
                 <div className="form-container">
                     <div className="left-section">
@@ -272,13 +281,13 @@ const AddDriver = () => {
 
                             {pdfFile && (
                                 <div>
-                                    <h4>Driver License</h4>
+                                    <h5>Driver License</h5>
                                     <a href={pdfFile} download={fileName}>
-                                        <button type="button" className="btn-download">Download File</button>
+                                        <button type="button" className="btn-download" onClick={downloadFile}>Download File</button>
                                     </a>
                                 </div>
                             )}
-                            <h4>Upload license in pdf format</h4>
+                            <h5>Upload license in pdf format</h5>
 
                             {/* File input to select PDF */}
                             <input
