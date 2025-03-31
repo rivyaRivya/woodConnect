@@ -37,6 +37,7 @@ const AddQuotation = () => {
                 setImageURL(`data:image/png;base64,${response.data.image}`);
                 if (response) {
                     setFormData(response.data);
+                    calculatePrice(response.data);
                 }
             } catch (error) {
                 toast.error("Error fetching quotation details");
