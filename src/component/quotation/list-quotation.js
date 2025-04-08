@@ -37,6 +37,8 @@ const ListQuotation = () => {
                         <th>ID</th>
                         <th>Username</th>
                         <th>Mobile</th>
+                        <th>Product Name</th>
+                        <th>Price</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -48,6 +50,8 @@ const ListQuotation = () => {
                                 <td>{index+1}</td>
                                 <td>{user.username}</td>
                                 <td>{user.mobile}</td>
+                                <td>{user.productName}</td>
+                                <td>{user.totalPrice}</td>
                                 <td>{user.status}</td>
                             </tr>
                         ))
